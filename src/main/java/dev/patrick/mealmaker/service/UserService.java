@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import dev.patrick.mealmaker.exception.InvalidPasswordException;
 import dev.patrick.mealmaker.exception.InvalidRefreshToken;
 import dev.patrick.mealmaker.exception.UsernameNotFoundException;
 import dev.patrick.mealmaker.repository.UserRepository;
@@ -73,11 +74,11 @@ public class UserService {
             Cookie cookie = new Cookie("jwt", refreshToken);
             cookie.setHttpOnly(true);
             cookie.setMaxAge(SECONDS_IN_DAY);
-            response.addCookie(new Cookie("jwt", refreshToken));
+            response.addCookie(cookie);
 
             return foundUser;
         } else {
-            throw new InvalidRefreshToken();
+            throw new InvalidPasswordException();
         }
 
     }

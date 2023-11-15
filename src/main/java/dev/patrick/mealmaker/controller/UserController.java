@@ -1,5 +1,6 @@
 package dev.patrick.mealmaker.controller;
 
+import dev.patrick.mealmaker.exception.InvalidPasswordException;
 import dev.patrick.mealmaker.exception.InvalidRefreshToken;
 import dev.patrick.mealmaker.exception.UsernameNotFoundException;
 import dev.patrick.mealmaker.service.UserService;
@@ -60,7 +61,7 @@ public class UserController {
         } catch (UsernameNotFoundException e) {
             resBody = "Username not found.";
             return new ResponseEntity<>(resBody, HttpStatus.NOT_FOUND);
-        } catch (InvalidRefreshToken e) {
+        } catch (InvalidPasswordException e) {
             resBody = "Invalid password.";
             return new ResponseEntity<>(resBody, HttpStatus.UNAUTHORIZED);
         }
