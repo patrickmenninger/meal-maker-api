@@ -1,9 +1,11 @@
 package dev.patrick.mealmaker.service;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import dev.patrick.mealmaker.exception.InvalidRefreshToken;
 import dev.patrick.mealmaker.user.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MissingRequestCookieException;
@@ -21,7 +23,7 @@ public class RefreshTokenService {
     private UserService userService;
 
 
-    public void getAccessToken(HttpServletRequest req) throws MissingRequestCookieException {
+    public String getAccessToken(HttpServletRequest req) throws MissingRequestCookieException {
 
         Cookie[] cookies = req.getCookies();
         String refreshToken = getRefreshTokenCookie(cookies);
@@ -31,10 +33,31 @@ public class RefreshTokenService {
             throw new InvalidRefreshToken();
         }
 
+        //Returns the username of the person from the token and catches a JWTVerificationException
+        String decodedUsername = null;
+        try {
+            decodedUsername = userService.verifyJWT(refreshToken);
+        } catch (JWTVerificationException e) {
+            throw new InvalidRefreshToken();
+        }
+
+        //If the username in the refreshToken doesn't equal the one in the
+        //database then a forbidden status is given to the user
+        if (foundUser.getUsername() != decodedUsername) {
+            throw new InvalidRefreshToken();
+        }
+
+        String accessToken = userService.getJWTToken(decodedUsername, UserService.ACCESS_TOKEN_EXPIRE);
+
+        return accessToken;
 
     }
 
     private String getRefreshTokenCookie(Cookie[] cookies) throws MissingRequestCookieException {
+
+        if (cookies == null) {
+            throw new IllegalArgumentException("No cookies");
+        }
 
         //TODO: look more into predicate for Java
         Predicate<Cookie> findJwtToken = t -> t.getName().equals("jwt");

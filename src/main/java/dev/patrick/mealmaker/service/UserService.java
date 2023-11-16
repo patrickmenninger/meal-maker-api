@@ -5,7 +5,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import dev.patrick.mealmaker.exception.InvalidPasswordException;
-import dev.patrick.mealmaker.exception.InvalidRefreshToken;
 import dev.patrick.mealmaker.exception.UsernameNotFoundException;
 import dev.patrick.mealmaker.repository.UserRepository;
 import dev.patrick.mealmaker.user.User;
@@ -22,7 +21,11 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-    private static final int MILLISECONDS_IN_DAY = 86400000;
+    //Expires after ten seconds
+    public static final Date ACCESS_TOKEN_EXPIRE = new Date(System.currentTimeMillis() + 10000);
+    //Expires after one day
+    public static final Date REFRESH_TOKEN_EXPIRE = new Date(System.currentTimeMillis() + 86400000);
+
     private static final int SECONDS_IN_DAY = 86400;
 
     //TODO: figure out what key to use
@@ -63,9 +66,9 @@ public class UserService {
         if (bCryptPasswordEncoder.matches(password, foundUser.getPassword())) {
 
             //Expires in 10 seconds
-            String accessToken = generateJWT(foundUser.getUsername(), new Date(System.currentTimeMillis() + 10000));
+            String accessToken = getJWTToken(foundUser.getUsername(), ACCESS_TOKEN_EXPIRE);
             //Expires after 1 day
-            String refreshToken = generateJWT(foundUser.getUsername(), new Date(System.currentTimeMillis() + MILLISECONDS_IN_DAY));
+            String refreshToken = getJWTToken(foundUser.getUsername(), REFRESH_TOKEN_EXPIRE);
 
             foundUser.setAccessToken(accessToken);
             foundUser.setRefreshToken(refreshToken);
@@ -81,6 +84,10 @@ public class UserService {
             throw new InvalidPasswordException();
         }
 
+    }
+
+    public String getJWTToken(String username, Date time) {
+        return generateJWT(username, time);
     }
 
     private String generateJWT(String username, Date time) {

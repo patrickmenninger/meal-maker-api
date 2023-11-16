@@ -3,6 +3,7 @@ package dev.patrick.mealmaker.controller;
 import dev.patrick.mealmaker.exception.InvalidRefreshToken;
 import dev.patrick.mealmaker.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +24,17 @@ public class RefreshTokenController {
     @GetMapping
     public ResponseEntity<String> getAccessToken(HttpServletRequest req) {
 
+        String resBody = null;
+
         try {
-            refreshTokenService.getAccessToken(req);
+            resBody = refreshTokenService.getAccessToken(req);
         } catch (MissingRequestCookieException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (InvalidRefreshToken e) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(resBody, HttpStatus.OK);
 
     }
 
