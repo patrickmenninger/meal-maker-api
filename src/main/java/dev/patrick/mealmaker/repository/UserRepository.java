@@ -5,20 +5,25 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
+/**
+ * UserRepository extends MongoRepository to interact with the MongoDB database
+ */
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
 
     /**
-     * Looks for a user based on the inputted username
+     * Finds the user with the inputted username
      * @param username The username to search for
      * @return The User object
      */
     @Query("{'username' : ?0}")
     User findByUsername(String username);
 
-    //TODO: find what this "?0" is
+    /**
+     * Finds the user with the inputted refreshToken
+     * @param refreshToken The refreshToken to search for
+     * @return The User object
+     */
     @Query("{'refreshToken' : ?0}")
     User findByRefreshToken(String refreshToken);
 

@@ -2,6 +2,11 @@ package dev.patrick.mealmaker.recipes;
 
 import lombok.*;
 
+/**
+ * Ingredient class represents an ingredient used to make food.
+ * Each ingredient contains information about the type of ingredient,
+ * the name of the ingredient, and the amount.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
