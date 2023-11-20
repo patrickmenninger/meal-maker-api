@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MissingRequestCookieException;
 
@@ -32,6 +33,11 @@ public class RefreshTokenService {
      */
     @Autowired
     private UserService userService;
+    /**
+     *
+     */
+    @Autowired
+    private AuthService authService;
 
     /**
      * Generates an access token from the passed in Http request which contains
@@ -60,7 +66,7 @@ public class RefreshTokenService {
         //Returns the username of the person from the token and catches a JWTVerificationException
         String decodedUsername = null;
         try {
-            decodedUsername = userService.verifyJWT(refreshToken);
+            decodedUsername = authService.verifyJWT(refreshToken);
         } catch (JWTVerificationException e) {
             throw new InvalidRefreshToken();
         }
@@ -72,7 +78,7 @@ public class RefreshTokenService {
         }
 
         //Generates a new access token using the username in the refresh token
-        String accessToken = userService.getJWTToken(decodedUsername, new Date(System.currentTimeMillis() + UserService.ACCESS_TOKEN_EXPIRE));
+        String accessToken = authService.getJWTToken(decodedUsername, new Date(System.currentTimeMillis() + AuthService.ACCESS_TOKEN_EXPIRE));
 
         return accessToken;
 

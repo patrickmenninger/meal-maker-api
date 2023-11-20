@@ -25,7 +25,7 @@ public class RecipeService {
      * Finds all the recipe objects
      * @return The recipe objects as a list
      */
-    public List<Recipe> allRecipes(UserService userService, HttpServletRequest req) {
+    public List<Recipe> allRecipes(AuthService authService, HttpServletRequest req) {
 
         if (req.getHeader("authorization") == null) {
             throw new IllegalArgumentException();
@@ -34,7 +34,7 @@ public class RecipeService {
         String authHeader = req.getHeader("authorization").split(" ")[1];
         //TODO: Figure out what to do with the username here or switch the return type
         //TODO: Could maybe get rid of this check and allow the recipes to be open
-        userService.verifyJWT(authHeader);
+        authService.verifyJWT(authHeader);
 
         return recipeRepository.findAll();
     }

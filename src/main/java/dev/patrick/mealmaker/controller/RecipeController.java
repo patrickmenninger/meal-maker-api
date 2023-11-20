@@ -2,6 +2,7 @@ package dev.patrick.mealmaker.controller;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import dev.patrick.mealmaker.recipes.Recipe;
+import dev.patrick.mealmaker.service.AuthService;
 import dev.patrick.mealmaker.service.RecipeService;
 import dev.patrick.mealmaker.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,10 +33,10 @@ public class RecipeController {
     private RecipeService recipeService;
 
     /**
-     * The instance of UserService to validate the user's access to the database
+     * The instance of AuthService to validate the user's access to the database
      */
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     /**
      * Gets all the recipes from the database from the service which uses the repository
@@ -48,7 +49,7 @@ public class RecipeController {
 
         try {
 
-            recipeList = recipeService.allRecipes(userService, req);
+            recipeList = recipeService.allRecipes(authService, req);
 
         } catch (JWTVerificationException e) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
