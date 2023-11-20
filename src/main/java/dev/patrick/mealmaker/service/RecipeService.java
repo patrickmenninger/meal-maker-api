@@ -33,6 +33,7 @@ public class RecipeService {
 
         String authHeader = req.getHeader("authorization").split(" ")[1];
         //TODO: Figure out what to do with the username here or switch the return type
+        //TODO: Could maybe get rid of this check and allow the recipes to be open
         userService.verifyJWT(authHeader);
 
         return recipeRepository.findAll();

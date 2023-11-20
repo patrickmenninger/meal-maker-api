@@ -9,12 +9,14 @@ import dev.patrick.mealmaker.exception.UsernameNotFoundException;
 import dev.patrick.mealmaker.repository.UserRepository;
 import dev.patrick.mealmaker.user.User;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -179,6 +181,28 @@ public class UserService {
      */
     public User findUserByRefreshToken(String refreshToken) {
         return userRepository.findByRefreshToken(refreshToken);
+    }
+
+    /**
+     * Gets all the users from the database and checks to ensure
+     * the user trying to access the information is allowed to base
+     * on their JWT token.
+     * @param request The Http request that is sent by the user
+     * @return The list of users
+     * @throws IllegalArgumentException if the authorization header of the request is null
+     */
+    public List<User> getAllUsers(HttpServletRequest request) {
+
+        if (request.getHeader("authorization") == null) {
+            throw new IllegalArgumentException();
+        }
+
+        String authHeader = request.getHeader("authorization").split(" ")[1];
+
+        //TODO: Change this so it checks to make sure the user's role allows them to see this info
+        verifyJWT(authHeader);
+
+        return userRepository.findAll();
     }
 
     //TODO: get rid of because it is for testing purposes

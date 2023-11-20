@@ -1,16 +1,18 @@
 package dev.patrick.mealmaker.controller;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import dev.patrick.mealmaker.exception.InvalidPasswordException;
-import dev.patrick.mealmaker.exception.InvalidRefreshToken;
 import dev.patrick.mealmaker.exception.UsernameNotFoundException;
 import dev.patrick.mealmaker.service.UserService;
 import dev.patrick.mealmaker.user.User;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -96,6 +98,25 @@ public class UserController {
 
         return responseEntity;
 
+    }
+
+    /**
+     * Gets the list of all users. The person accessing needs to
+     * have a role of editor in order to see the users.
+     * @return The response with the list of users
+     */
+    public ResponseEntity<List<User>> getAllUsers(HttpServletRequest request) {
+        List<User> userList = null;
+
+        try {
+            userList = userService.getAllUsers(request);
+        } catch (JWTVerificationException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<List<User>>(userList, HttpStatus.OK);
     }
 
     //TODO: get rid of this, just for testing purposes
