@@ -27,9 +27,9 @@ import java.util.UUID;
 public class UserService {
 
     /** Date used to describe when the access token expires which is 10 seconds */
-    public static final Date ACCESS_TOKEN_EXPIRE = new Date(System.currentTimeMillis() + 10000);
+    public static final int ACCESS_TOKEN_EXPIRE = 10000;
     /** Date used to describe when the refresh token expires which is 1 day */
-    public static final Date REFRESH_TOKEN_EXPIRE = new Date(System.currentTimeMillis() + 86400000);
+    public static final int REFRESH_TOKEN_EXPIRE = 86400000;
 
     /** The number of seconds in a day */
     private static final int SECONDS_IN_DAY = 86400;
@@ -95,9 +95,9 @@ public class UserService {
         if (bCryptPasswordEncoder.matches(password, foundUser.getPassword())) {
 
             //Expires in 10 seconds
-            String accessToken = getJWTToken(foundUser.getUsername(), ACCESS_TOKEN_EXPIRE);
+            String accessToken = getJWTToken(foundUser.getUsername(), new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE));
             //Expires after 1 day
-            String refreshToken = getJWTToken(foundUser.getUsername(), REFRESH_TOKEN_EXPIRE);
+            String refreshToken = getJWTToken(foundUser.getUsername(), new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE));
 
             //Updates the User's fields and then the new information is saved to the database
             foundUser.setAccessToken(accessToken);

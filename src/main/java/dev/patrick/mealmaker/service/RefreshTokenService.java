@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MissingRequestCookieException;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.function.Predicate;
 
 //TODO: definitely go over this class again and try to understand the predicates, the usage of
@@ -71,7 +72,7 @@ public class RefreshTokenService {
         }
 
         //Generates a new access token using the username in the refresh token
-        String accessToken = userService.getJWTToken(decodedUsername, UserService.ACCESS_TOKEN_EXPIRE);
+        String accessToken = userService.getJWTToken(decodedUsername, new Date(System.currentTimeMillis() + UserService.ACCESS_TOKEN_EXPIRE));
 
         return accessToken;
 

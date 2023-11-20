@@ -105,6 +105,7 @@ public class UserController {
      * have a role of editor in order to see the users.
      * @return The response with the list of users
      */
+    @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers(HttpServletRequest request) {
         List<User> userList = null;
 
@@ -116,7 +117,9 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<List<User>>(userList, HttpStatus.OK);
+        //TODO: Change how the users are returned because right now the access token and
+        //TODO: refresh token are being returned with the user information when they shouldn't be
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     //TODO: get rid of this, just for testing purposes
