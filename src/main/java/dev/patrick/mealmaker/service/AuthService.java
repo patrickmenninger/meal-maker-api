@@ -8,13 +8,13 @@ import dev.patrick.mealmaker.exception.InvalidPasswordException;
 import dev.patrick.mealmaker.exception.UsernameNotFoundException;
 import dev.patrick.mealmaker.repository.UserRepository;
 import dev.patrick.mealmaker.user.User;
+import dev.patrick.mealmaker.util.ArrayList;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MissingRequestCookieException;
 
 import java.util.Date;
 import java.util.UUID;
@@ -69,9 +69,9 @@ public class AuthService {
         if (bCryptPasswordEncoder.matches(password, foundUser.getPassword())) {
 
             //Expires in 10 seconds
-            String accessToken = getJWTToken(foundUser.getUsername(), new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE));
+            String accessToken = getJWTToken(foundUser, new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE));
             //Expires after 1 day
-            String refreshToken = getJWTToken(foundUser.getUsername(), new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE));
+            String refreshToken = getJWTToken(foundUser, new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE));
 
             //Updates the User's fields and then the new information is saved to the database
             foundUser.setAccessToken(accessToken);
@@ -133,29 +133,30 @@ public class AuthService {
 
     /**
      * Gets the JWT token
-     * @param username The username to encode
+     * @param user The user to encode
      * @param time The time that the token will expire
      * @return The token
      */
-    public String getJWTToken(String username, Date time) {
-        return generateJWT(username, time);
+    public String getJWTToken(User user, Date time) {
+        return generateJWT(user.getUsername(), user.getRoles(), time);
     }
 
     /**
      * Generates the JWT token with Auth0
      * @param username The username to encode
+     * @param roles The list of roles to encode
      * @param time The time the token will expire
      * @return The token
      */
-    private String generateJWT(String username, Date time) {
+    private String generateJWT(String username, ArrayList<Integer> roles, Date time) {
 
         String jwtToken = JWT.create()
                 //TODO: look more into this one and subject
                 .withIssuer("MealMaker")
                 .withSubject("MealMaker details")
                 //Information in the token
-                //TODO: add another claim for the user roles once created
                 .withClaim("username", username)
+                .withClaim("roles", roles.toString())
                 //Date issued
                 .withIssuedAt(new Date())
                 //Expire time

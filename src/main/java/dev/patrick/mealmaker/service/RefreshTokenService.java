@@ -77,8 +77,8 @@ public class RefreshTokenService {
             throw new InvalidRefreshToken();
         }
 
-        //Generates a new access token using the username in the refresh token
-        String accessToken = authService.getJWTToken(decodedUsername, new Date(System.currentTimeMillis() + AuthService.ACCESS_TOKEN_EXPIRE));
+        //Generates a new access token using the username and roles of the user in the refresh token
+        String accessToken = authService.getJWTToken(foundUser, new Date(System.currentTimeMillis() + AuthService.ACCESS_TOKEN_EXPIRE));
 
         return accessToken;
 
@@ -97,7 +97,7 @@ public class RefreshTokenService {
             throw new IllegalArgumentException("No cookies");
         }
 
-        //I think this sets basically and if statement where it checks for
+        //I think this sets basically an if statement where it checks for
         //the input to equal "jwt"
         Predicate<Cookie> findJwtToken = t -> t.getName().equals("jwt");
 
