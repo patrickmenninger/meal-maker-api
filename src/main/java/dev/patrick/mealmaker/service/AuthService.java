@@ -92,8 +92,15 @@ public class AuthService {
 
     }
 
+    /**
+     * Logs out the user and deletes their refresh and access token
+     * @param request The Http request containing the refresh token
+     * @param response The Http response without the jwt cookie
+     * @return The User that was logged out
+     * @throws IllegalArgumentException If the cookies don't exist, or they don't contain the jwt cookie
+     */
     public User logout(HttpServletRequest request, HttpServletResponse response) {
-
+        //TODO: on the client side delete the access token when they logout
         Cookie[] cookies = request.getCookies();
 
         if (cookies == null) {

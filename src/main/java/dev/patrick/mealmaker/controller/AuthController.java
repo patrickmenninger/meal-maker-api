@@ -27,7 +27,7 @@ public class AuthController {
     AuthService authService;
 
     /**
-     * Logins a user when they make a request to "/login" path. The user is
+     * Log ins a user when they make a request to "/login" path. The user is
      * logged in through the logic in UserService class.
      * @param payload The information passed in from the form on the website containing
      *                the username and password of the user.
@@ -66,6 +66,14 @@ public class AuthController {
 
     }
 
+    /**
+     * Logs out a user when they make a request to "/logout". The
+     * business logic is handeled in the service class which deletes the
+     * refresh token and acess token
+     * @param request The Http request with the cookies
+     * @param response The Http request without the jwt cookie
+     * @return The response with status 204 and the username of the logged-out user
+     */
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
 
@@ -73,13 +81,13 @@ public class AuthController {
 
         try {
 
-            resBody = authService.logout(request, response).getUsername();
+            authService.logout(request, response).getUsername();
 
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            //Do nothing
         }
 
-        return new ResponseEntity<>(resBody, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 
