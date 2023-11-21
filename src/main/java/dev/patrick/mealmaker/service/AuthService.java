@@ -9,14 +9,19 @@ import dev.patrick.mealmaker.exception.UsernameNotFoundException;
 import dev.patrick.mealmaker.repository.UserRepository;
 import dev.patrick.mealmaker.user.User;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MissingRequestCookieException;
 
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * TODO: Javadoc
+ */
 @Service
 public class AuthService {
 
@@ -34,7 +39,7 @@ public class AuthService {
     /** The encoder used to encode the JWT token */
     private static BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 
-    /** The instance of UserService to find the users */
+    /** The instance of UserRepository to find the users */
     @Autowired
     private UserRepository userRepository;
 
@@ -87,8 +92,40 @@ public class AuthService {
 
     }
 
+    public User logout(HttpServletRequest request, HttpServletResponse response) {
+
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
+            throw new IllegalArgumentException();
+        }
+
+        //Gets the refresh token
+        String refreshToken = RefreshTokenService.getRefreshTokenCookie(cookies);
+
+        //Finds the user with that refresh token
+        User foundUser = userRepository.findByRefreshToken(refreshToken);
+
+        //Delete the cookie from the database and then clear the cookie from the response
+        if (foundUser != null) {
+
+            foundUser.setRefreshToken("");
+            userRepository.save(foundUser);
+
+        }
+
+        //Removes the cookie by setting age to 0
+        Cookie removeCookie = new Cookie("jwt", null);
+        removeCookie.setHttpOnly(true);
+        removeCookie.setMaxAge(0);
+        response.addCookie(removeCookie);
+
+        return foundUser;
+
+    }
+
     /**
-     * Generates the JWT token
+     * Gets the JWT token
      * @param username The username to encode
      * @param time The time that the token will expire
      * @return The token
@@ -126,11 +163,11 @@ public class AuthService {
     }
 
     /**
-     * Decodes the JWT token and returns the username encoded inside
+     * Decodes the JWT token and returns the decoded object
      * @param jwtToken The token to decode
-     * @return The username that was encoded
+     * @return The decoded string
      */
-    public String verifyJWT(String jwtToken) {
+    public DecodedJWT verifyJWT(String jwtToken) {
 
         //Verifies the token
         JWTVerifier verifier = JWT.require(algorithm)
@@ -139,7 +176,7 @@ public class AuthService {
 
         //Decodes the token
         DecodedJWT decodedJWT = verifier.verify(jwtToken);
-        return decodedJWT.getClaim("username").asString();
+        return decodedJWT;
 
     }
 

@@ -42,7 +42,7 @@ public class RefreshTokenController {
         try {
             //Sets the response of the http request to be the access token
             resBody = refreshTokenService.getAccessToken(req);
-        } catch (MissingRequestCookieException e) {
+        } catch (IllegalArgumentException e) {
             //If the request doesn't contain a refresh token
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (InvalidRefreshToken e) {

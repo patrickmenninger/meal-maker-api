@@ -4,14 +4,20 @@ import dev.patrick.mealmaker.exception.InvalidPasswordException;
 import dev.patrick.mealmaker.exception.UsernameNotFoundException;
 import dev.patrick.mealmaker.service.AuthService;
 import dev.patrick.mealmaker.user.User;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * TODO: Javadoc
+ */
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/")
@@ -57,6 +63,23 @@ public class AuthController {
         }
 
         return responseEntity;
+
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+
+        String resBody = null;
+
+        try {
+
+            resBody = authService.logout(request, response).getUsername();
+
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(resBody, HttpStatus.NO_CONTENT);
 
     }
 

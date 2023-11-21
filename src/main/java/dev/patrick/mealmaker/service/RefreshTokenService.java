@@ -50,7 +50,7 @@ public class RefreshTokenService {
      *                             exist or the refresh token was tampered with
      * @throws IllegalArgumentException if the cookies of the request is null
      */
-    public String getAccessToken(HttpServletRequest req) throws MissingRequestCookieException {
+    public String getAccessToken(HttpServletRequest req) {
 
         //The cookie objects from the request
         Cookie[] cookies = req.getCookies();
@@ -66,7 +66,7 @@ public class RefreshTokenService {
         //Returns the username of the person from the token and catches a JWTVerificationException
         String decodedUsername = null;
         try {
-            decodedUsername = authService.verifyJWT(refreshToken);
+            decodedUsername = authService.verifyJWT(refreshToken).getClaim("username").asString();
         } catch (JWTVerificationException e) {
             throw new InvalidRefreshToken();
         }
@@ -91,7 +91,7 @@ public class RefreshTokenService {
      * @throws IllegalArgumentException if the cookies are null
      * @throws MissingRequestCookieException if the cookies don't contain a JWT parameter
      */
-    private String getRefreshTokenCookie(Cookie[] cookies) throws MissingRequestCookieException {
+    public static String getRefreshTokenCookie(Cookie[] cookies) {
 
         if (cookies == null) {
             throw new IllegalArgumentException("No cookies");
@@ -102,7 +102,7 @@ public class RefreshTokenService {
         Predicate<Cookie> findJwtToken = t -> t.getName().equals("jwt");
 
         if (Arrays.stream(cookies).noneMatch(findJwtToken)) {
-            throw new MissingRequestCookieException("jwt", null);
+            throw new IllegalArgumentException("No jwt cookie");
         }
 
         //Filters the cookies based on the predicate or "if statement" then
