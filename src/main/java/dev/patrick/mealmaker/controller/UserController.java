@@ -7,6 +7,7 @@ import dev.patrick.mealmaker.service.UserService;
 import dev.patrick.mealmaker.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,7 +86,9 @@ public class UserController {
     //TODO: get rid of this, just for testing purposes
     @PostMapping("/deleteAll")
     public void deleteUsers() {
-        userService.deleteUsers();
+
+            userService.deleteUsers();
+
     }
 
 

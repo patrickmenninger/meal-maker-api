@@ -22,10 +22,8 @@ public class User {
 
     /** Number associated with admin role */
     public static int ADMIN_ROLE = 101;
-    /** Number associated with the editor role */
-    public static int EDITOR_ROLE = 201;
     /** Number associated with user role */
-    public static int USER_ROLE = 301;
+    public static int USER_ROLE = 201;
 
     @Id
     private ObjectId id;

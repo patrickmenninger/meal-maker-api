@@ -1,12 +1,15 @@
 package dev.patrick.mealmaker.service;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import dev.patrick.mealmaker.repository.UserRepository;
 import dev.patrick.mealmaker.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Service class for the User objects. It deals with all the business logic
@@ -71,8 +74,11 @@ public class UserService {
 
         String authHeader = request.getHeader("authorization").split(" ")[1];
 
-        //TODO: Change this so it checks to make sure the user's role allows them to see this info
-        authService.verifyJWT(authHeader);
+        //Gets the decoded JWT object
+        DecodedJWT decodedJWT = authService.verifyJWT(authHeader);
+
+        //Checks to see if any of the roles associated with the user matches the admin role
+        checkRole(decodedJWT.getClaim("roles").asString().split(","), Integer.toString(User.ADMIN_ROLE));
 
         return userRepository.findAll();
     }
@@ -80,6 +86,17 @@ public class UserService {
     //TODO: get rid of because it is for testing purposes
     public void deleteUsers() {
         userRepository.deleteAll();
+    }
+
+    private void checkRole(String[] roles, String roleToCheckFor) {
+
+        //Predicate to see if any of the roles match the given role
+        Predicate<String> givenRole = r -> r.equals(roleToCheckFor);
+        if (Arrays.stream(roles).noneMatch(givenRole)) {
+            //If none match then IllegalArgumentException is thrown
+            throw new IllegalArgumentException();
+        }
+
     }
 
 }
