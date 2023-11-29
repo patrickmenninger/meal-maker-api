@@ -1,5 +1,6 @@
 package dev.patrick.mealmaker.service;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import dev.patrick.mealmaker.repository.UserRepository;
 import dev.patrick.mealmaker.user.User;
@@ -72,7 +73,13 @@ public class UserService {
             throw new IllegalArgumentException();
         }
 
-        String authHeader = request.getHeader("authorization").split(" ")[1];
+        String authHeader = request.getHeader("authorization");
+        if (!authHeader.startsWith("Bearer")) {
+            //If the authorization isn't a Bearer token
+            throw new JWTVerificationException(null);
+        }
+
+        authHeader = request.getHeader("authorization").split(" ")[1];
 
         //Gets the decoded JWT object
         DecodedJWT decodedJWT = authService.verifyJWT(authHeader);

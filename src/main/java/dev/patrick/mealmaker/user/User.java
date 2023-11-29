@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 
 
 /**
@@ -40,11 +41,27 @@ public class User {
     private String refreshToken;
 
     public User (String username, String password) {
-        this.username = username;
-        this.password = password;
+        setUsername(username);
+        setPassword(password);
 
         roles = new ArrayList<>();
         this.roles.add(USER_ROLE);
+    }
+
+    private void setUsername(String username) {
+        if (username == null || username.equals("")) {
+            throw new AuthenticationCredentialsNotFoundException("Username required");
+        }
+
+        this.username = username;
+    }
+
+    private void setPassword(String pw) {
+        if (pw == null || pw.equals("")) {
+            throw new AuthenticationCredentialsNotFoundException("Password required.");
+        }
+
+        this.password = pw;
     }
 
 }

@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class AuthController {
             resBody = foundUser.getAccessToken();
             responseEntity = new ResponseEntity<>(resBody, HttpStatus.OK);
 
-        } catch (IllegalArgumentException e) {
+        } catch (AuthenticationCredentialsNotFoundException e) {
             //If one of the inputs or both are empty
             resBody = "Username and password required.";
             return new ResponseEntity<>(resBody, HttpStatus.BAD_REQUEST);

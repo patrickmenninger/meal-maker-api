@@ -13,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,8 +54,8 @@ public class AuthService {
     public User login(String username, String password, HttpServletResponse response) {
 
         //Makes sure the username and password aren't null
-        if (username == null || password == null) {
-            throw new IllegalArgumentException("Username and password are required.");
+        if (username == null || username.equals("") || password == null || password.equals("")) {
+            throw new AuthenticationCredentialsNotFoundException("Username and password are required.");
         }
 
         //Finds the user in the database
