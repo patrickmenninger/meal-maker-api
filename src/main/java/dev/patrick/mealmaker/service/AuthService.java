@@ -83,6 +83,7 @@ public class AuthService {
             Cookie cookie = new Cookie("jwt", refreshToken);
             cookie.setHttpOnly(true);
             cookie.setMaxAge(SECONDS_IN_DAY);
+            cookie.setSecure(true);
             response.addCookie(cookie);
 
             return foundUser;
