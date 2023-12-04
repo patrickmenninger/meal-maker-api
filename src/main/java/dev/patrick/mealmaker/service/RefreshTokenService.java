@@ -50,7 +50,7 @@ public class RefreshTokenService {
      *                             exist or the refresh token was tampered with
      * @throws IllegalArgumentException if the cookies of the request is null
      */
-    public String getAccessToken(HttpServletRequest req) {
+    public User getAccessToken(HttpServletRequest req) {
 
         //The cookie objects from the request
         Cookie[] cookies = req.getCookies();
@@ -80,7 +80,9 @@ public class RefreshTokenService {
         //Generates a new access token using the username and roles of the user in the refresh token
         String accessToken = authService.getJWTToken(foundUser, new Date(System.currentTimeMillis() + AuthService.ACCESS_TOKEN_EXPIRE));
 
-        return accessToken;
+        foundUser.setAccessToken(accessToken);
+
+        return foundUser;
 
     }
 

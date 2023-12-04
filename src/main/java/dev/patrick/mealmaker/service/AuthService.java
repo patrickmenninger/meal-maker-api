@@ -102,12 +102,8 @@ public class AuthService {
      * @throws IllegalArgumentException If the cookies don't exist, or they don't contain the jwt cookie
      */
     public User logout(HttpServletRequest request, HttpServletResponse response) {
-        //TODO: on the client side delete the access token when they logout
+        //TODO: on the client side delete the access token when they log out
         Cookie[] cookies = request.getCookies();
-
-        if (cookies == null) {
-            throw new IllegalArgumentException();
-        }
 
         //Gets the refresh token
         String refreshToken = RefreshTokenService.getRefreshTokenCookie(cookies);

@@ -1,5 +1,6 @@
 package dev.patrick.mealmaker.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.patrick.mealmaker.util.ArrayList;
 import lombok.*;
 import org.bson.types.ObjectId;
@@ -27,10 +28,12 @@ public class User {
     public static int USER_ROLE = 201;
 
     @Id
+    @JsonIgnore
     private ObjectId id;
     /** The username of the user */
     private String username;
     /** The password of the user */
+    @JsonIgnore
     private String password;
     /** The role of the user */
     private ArrayList<Integer> roles;
@@ -38,6 +41,7 @@ public class User {
     @Transient
     private String accessToken;
     /** The refresh token of the user */
+    @JsonIgnore
     private String refreshToken;
 
     public User (String username, String password) {

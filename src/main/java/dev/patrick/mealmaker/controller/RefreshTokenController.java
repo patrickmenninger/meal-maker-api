@@ -2,6 +2,7 @@ package dev.patrick.mealmaker.controller;
 
 import dev.patrick.mealmaker.exception.InvalidRefreshToken;
 import dev.patrick.mealmaker.service.RefreshTokenService;
+import dev.patrick.mealmaker.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * RefreshTokenService in order to actually execute the code.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/refresh")
 public class RefreshTokenController {
 
@@ -34,13 +35,18 @@ public class RefreshTokenController {
      *          and the status depending on whether an exception was thrown
      */
     @GetMapping
-    public ResponseEntity<String> getAccessToken(HttpServletRequest req) {
+    public ResponseEntity<User> getAccessToken(HttpServletRequest req) {
 
-        String resBody = null;
 
         try {
             //Sets the response of the http request to be the access token
-            resBody = refreshTokenService.getAccessToken(req);
+            User user = refreshTokenService.getAccessToken(req);
+
+            /*
+             * If there are no problems validating the refresh token and
+             * generating the new access token
+             */
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             //If the request doesn't contain a refresh token
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -51,12 +57,6 @@ public class RefreshTokenController {
              */
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-
-        /*
-         * If there are no problems validating the refresh token and
-         * generating the new access token
-         */
-        return new ResponseEntity<>(resBody, HttpStatus.OK);
 
     }
 

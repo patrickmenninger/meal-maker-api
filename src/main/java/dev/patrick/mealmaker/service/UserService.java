@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -69,17 +70,17 @@ public class UserService {
      */
     public List<User> getAllUsers(HttpServletRequest request) {
 
-        if (request.getHeader("authorization") == null) {
+        if (request.getHeader("Authorization") == null) {
             throw new IllegalArgumentException();
         }
 
-        String authHeader = request.getHeader("authorization");
+        String authHeader = request.getHeader("Authorization");
         if (!authHeader.startsWith("Bearer")) {
             //If the authorization isn't a Bearer token
             throw new JWTVerificationException(null);
         }
 
-        authHeader = request.getHeader("authorization").split(" ")[1];
+        authHeader = request.getHeader("Authorization").split(" ")[1];
 
         //Gets the decoded JWT object
         DecodedJWT decodedJWT = authService.verifyJWT(authHeader);

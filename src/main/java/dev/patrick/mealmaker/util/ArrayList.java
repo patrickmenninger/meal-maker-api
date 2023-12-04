@@ -40,6 +40,10 @@ public class ArrayList<E> extends AbstractList<E> {
     @Override
     public String toString() {
 
+        if (size == 0) {
+            return "";
+        }
+
         String rtnString = "";
 
         for (int i = 0; i < size; i++) {

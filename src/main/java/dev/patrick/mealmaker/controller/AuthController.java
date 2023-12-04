@@ -20,7 +20,7 @@ import java.util.Map;
  * TODO: Javadoc
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/")
 public class AuthController {
 
@@ -36,31 +36,26 @@ public class AuthController {
      * @return The response sent back to the user
      */
     @PostMapping("login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> payload, HttpServletResponse response) {
+    public ResponseEntity<User> login(@RequestBody Map<String, String> payload, HttpServletResponse response) {
 
-        ResponseEntity<String> responseEntity;
+        ResponseEntity<User> responseEntity;
         User foundUser;
-        String resBody;
 
         try {
 
             //Searches for the user in the database if they exist and the password is correct
             foundUser = authService.login(payload.get("username"), payload.get("password"), response);
-            resBody = foundUser.getAccessToken();
-            responseEntity = new ResponseEntity<>(resBody, HttpStatus.OK);
+            responseEntity = new ResponseEntity<>(foundUser, HttpStatus.OK);
 
         } catch (AuthenticationCredentialsNotFoundException e) {
             //If one of the inputs or both are empty
-            resBody = "Username and password required.";
-            return new ResponseEntity<>(resBody, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (UsernameNotFoundException e) {
             //If the username cannot be found
-            resBody = "Username not found.";
-            return new ResponseEntity<>(resBody, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (InvalidPasswordException e) {
             //If the password doesn't match the one for the given user
-            resBody = "Invalid password.";
-            return new ResponseEntity<>(resBody, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         return responseEntity;
@@ -75,14 +70,12 @@ public class AuthController {
      * @param response The Http request without the jwt cookie
      * @return The response with status 204 and the username of the logged-out user
      */
-    @PostMapping("/logout")
+    @GetMapping("logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
-
-        String resBody = null;
 
         try {
 
-            authService.logout(request, response).getUsername();
+            authService.logout(request, response);
 
         } catch (IllegalArgumentException e) {
             //Do nothing

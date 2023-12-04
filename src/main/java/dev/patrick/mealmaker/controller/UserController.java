@@ -24,7 +24,7 @@ import java.util.Map;
  * associated with each request.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/")
 public class UserController {
 
