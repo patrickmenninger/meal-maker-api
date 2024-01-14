@@ -27,7 +27,7 @@ import java.util.UUID;
 public class AuthService {
 
     /** Date used to describe when the access token expires which is 10 seconds */
-    public static final int ACCESS_TOKEN_EXPIRE = 10000;
+    public static final int ACCESS_TOKEN_EXPIRE = 10000000;
     /** Date used to describe when the refresh token expires which is 1 day */
     public static final int REFRESH_TOKEN_EXPIRE = 86400000;
 

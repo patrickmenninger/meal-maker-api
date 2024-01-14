@@ -37,6 +37,8 @@ public class Recipe {
     private Nutrition nutrition;
     /** The list of ingrediants of the recipe */
     private List<Ingredient> ingredients;
+    /** The link to the image of the meal */
+    private String image;
 
 
 
