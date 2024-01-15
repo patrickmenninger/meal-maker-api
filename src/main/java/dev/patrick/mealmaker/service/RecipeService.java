@@ -1,6 +1,7 @@
 package dev.patrick.mealmaker.service;
 
 import dev.patrick.mealmaker.recipes.Recipe;
+import dev.patrick.mealmaker.repository.CustomRecipeRepository;
 import dev.patrick.mealmaker.repository.RecipeRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class RecipeService {
     @Autowired
     private RecipeRepository recipeRepository;
 
+    @Autowired
+    private CustomRecipeRepository customRecipeRepository;
+
     /**
      * Finds all the recipe objects
      * @return The recipe objects as a list
@@ -36,7 +40,7 @@ public class RecipeService {
         //TODO: Could maybe get rid of this check and allow the recipes to be open
         authService.verifyJWT(authHeader);
 
-        return recipeRepository.findAll();
+        return customRecipeRepository.findRecipes(req);
     }
 
 }
