@@ -28,26 +28,21 @@ public class CustomRecipeRepository {
         String title = "";
         int cookTimeUp = UP_COOK_TIME;
         int cookTimeLow = LOW_COOK_TIME;
-        String totalCost = "200.00";
+        double totalCost = 200.00;
 
-        System.out.println(req.getQueryString());
 
         if (params.get("title") != null && !params.get("title")[0].equals("")) {
-
-            System.out.println(params.get("title")[0]);
             title = params.get("title")[0];
         }
 
         if (params.get("cookTime") != null && !params.get("cookTime")[0].equals("")) {
 
-            String[] cookTimes = params.get("cookTime")[0].split("_");
+            String[] cookTimes = params.get("cookTime")[0].split(",");
 
-            int maxCookTime = Integer.parseInt(cookTimes[1].split("-")[1]);
-            int minCookTime = Integer.parseInt(cookTimes[1].split("-")[0]);
+            int maxCookTime = Integer.parseInt(cookTimes[0].split("-")[1]);
+            int minCookTime = Integer.parseInt(cookTimes[0].split("-")[0]);
 
             for (int i = 1; i < cookTimes.length; i++) {
-
-                System.out.println(cookTimes[i]);
 
                 if (Integer.parseInt(cookTimes[i].split("-")[0]) < minCookTime) {
                     minCookTime = Integer.parseInt(cookTimes[i].split("-")[0]);
@@ -61,19 +56,17 @@ public class CustomRecipeRepository {
 
             cookTimeUp = maxCookTime;
             cookTimeLow = minCookTime;
-            System.out.println("low " + cookTimeLow + " high " + cookTimeUp);
         }
 
         if (params.get("totalCost") != null && !params.get("totalCost")[0].equals("")) {
-            System.out.println(params.get("totalCost")[0]);
-            totalCost = params.get("totalCost")[0];
+            totalCost = Double.parseDouble(params.get("totalCost")[0]);
         }
 
         Query query = new Query();
 
         query.addCriteria(Criteria.where("title").regex(".*" + title + ".*", "i"));
         query.addCriteria(Criteria.where("cookTime").lte(cookTimeUp).gte(cookTimeLow));
-        query.addCriteria(Criteria.where("totalCost").lt(Double.parseDouble(totalCost)));
+        query.addCriteria(Criteria.where("totalCost").lt(totalCost));
 
         return mongoTemplate.find(query, Recipe.class, "recipes");
 
