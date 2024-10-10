@@ -4,14 +4,14 @@ import dev.patrick.mealmaker.exception.InvalidPasswordException;
 import dev.patrick.mealmaker.exception.UsernameNotFoundException;
 import dev.patrick.mealmaker.service.AuthService;
 import dev.patrick.mealmaker.user.User;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;

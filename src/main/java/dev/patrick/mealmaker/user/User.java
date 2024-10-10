@@ -23,9 +23,9 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 public class User {
 
     /** Number associated with admin role */
-    public static int ADMIN_ROLE = 101;
+    public static int ADMIN_ROLE = 201;
     /** Number associated with user role */
-    public static int USER_ROLE = 201;
+    public static int USER_ROLE = 101;
 
     @Id
     @JsonIgnore
