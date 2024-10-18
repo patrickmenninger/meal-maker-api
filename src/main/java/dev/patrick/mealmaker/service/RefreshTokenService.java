@@ -99,8 +99,8 @@ public class RefreshTokenService {
             throw new IllegalArgumentException("No cookies");
         }
 
-        //I think this sets basically an if statement where it checks for
-        //the input to equal "jwt"
+        //Like an if statement to be used on each Cookie
+        //It checks for a cookie that has the name "jwt"
         Predicate<Cookie> jwtToken = t -> t.getName().equals("jwt");
 
         if (Arrays.stream(cookies).noneMatch(jwtToken)) {
@@ -109,9 +109,9 @@ public class RefreshTokenService {
 
         //Filters the cookies based on the predicate or "if statement" then
         //finds the first instance of that key and gets the value
-        String token = Arrays.stream(cookies).
-                filter(jwtToken).
-                findFirst()
+        String token = Arrays.stream(cookies)
+                .filter(jwtToken)
+                .findFirst()
                 .map(c -> c.getValue())
                 .get();
 
