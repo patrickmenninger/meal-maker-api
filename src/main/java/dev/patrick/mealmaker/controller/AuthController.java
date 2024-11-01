@@ -70,7 +70,7 @@ public class AuthController {
      * @param response The Http request without the jwt cookie
      * @return The response with status 204 and the username of the logged-out user
      */
-    @GetMapping("logout")
+    @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
 
         try {

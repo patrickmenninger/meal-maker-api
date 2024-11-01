@@ -30,7 +30,7 @@ import java.util.UUID;
 public class AuthService {
 
     /** Date used to describe when the access token expires which is 10 seconds */
-    public static final int ACCESS_TOKEN_EXPIRE = 10000000;
+    public static final int ACCESS_TOKEN_EXPIRE = 10000;
     /** Date used to describe when the refresh token expires which is 1 day */
     public static final int REFRESH_TOKEN_EXPIRE = 86400000;
 
@@ -125,7 +125,8 @@ public class AuthService {
         //Removes the cookie by setting age to 0
         Cookie removeCookie = new Cookie("jwt", null);
         removeCookie.setHttpOnly(true);
-        removeCookie.setMaxAge(0);
+        removeCookie.setSecure(true);
+        removeCookie.setMaxAge(-1);
         response.addCookie(removeCookie);
 
         return foundUser;
