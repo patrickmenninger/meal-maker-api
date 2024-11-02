@@ -1,4 +1,4 @@
-package dev.patrick.mealmaker.exception;
+package dev.patrick.mealmaker.old.exception;
 
 /**
  * InvalidRefreshToken is an exception thrown if the inputted refresh token

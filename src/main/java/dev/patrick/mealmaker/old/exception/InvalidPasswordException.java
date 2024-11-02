@@ -1,4 +1,4 @@
-package dev.patrick.mealmaker.exception;
+package dev.patrick.mealmaker.old.exception;
 
 /**
  * InvalidPasswordException is an exception that is thrown if the

@@ -1,71 +1,71 @@
 package dev.patrick.mealmaker.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dev.patrick.mealmaker.util.ArrayList;
+import jakarta.persistence.*;
 import lombok.*;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 
 /**
  * The User class contains the username and password of a user
  */
-@Getter
-@Setter
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
-@Document(collection = "users")
-public class User {
-
-    /** Number associated with admin role */
-    public static int ADMIN_ROLE = 201;
-    /** Number associated with user role */
-    public static int USER_ROLE = 101;
+@Entity
+@Table(name = "users")
+public class User  implements UserDetails {
 
     @Id
-    @JsonIgnore
-    private ObjectId id;
-    /** The username of the user */
-    private String username;
-    /** The password of the user */
-    @JsonIgnore
+    @GeneratedValue
+    private Integer id;
+    private String firstname;
+    private String lastname;
+    private String email;
     private String password;
-    /** The role of the user */
-    private ArrayList<Integer> roles;
-    /** The access token of the user */
-    @Transient
-    private String accessToken;
-    /** The refresh token of the user */
-    @JsonIgnore
-    private String refreshToken;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+//    @Transient
+//    private String accessToken;
+//    @JsonIgnore
+//    private String refreshToken;
 
-    public User (String username, String password) {
-        setUsername(username);
-        setPassword(password);
-
-        roles = new ArrayList<>();
-        this.roles.add(USER_ROLE);
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    private void setUsername(String username) {
-        if (username == null || username.equals("")) {
-            throw new AuthenticationCredentialsNotFoundException("Username required");
-        }
-
-        this.username = username;
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 
-    private void setPassword(String pw) {
-        if (pw == null || pw.equals("")) {
-            throw new AuthenticationCredentialsNotFoundException("Password required.");
-        }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-        this.password = pw;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
 }
