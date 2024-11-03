@@ -1,6 +1,7 @@
 package dev.patrick.mealmaker.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,5 +25,19 @@ public class UserService {
                 )
                 .collect(Collectors.toList());
 
+    }
+
+    public UserDTO getUser(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "Username not found"
+                ));
+        return new UserDTO(
+                user.getId(),
+                user.getFirstname(),
+                user.getLastname(),
+                user.getEmail(),
+                user.getRole()
+        );
     }
 }
