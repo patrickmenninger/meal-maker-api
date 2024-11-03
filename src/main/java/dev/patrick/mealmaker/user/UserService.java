@@ -31,9 +31,9 @@ public class UserService {
     public UserDTO getUser(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Username not found"
+                        "User not found"
                 ));
-        
+
         return new UserDTO(
                 user.getId(),
                 user.getFirstname(),
