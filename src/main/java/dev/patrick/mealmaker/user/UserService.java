@@ -1,5 +1,6 @@
 package dev.patrick.mealmaker.user;
 
+import dev.patrick.mealmaker.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,10 @@ public class UserService {
 
     public UserDTO getUser(Integer id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Username not found"
                 ));
+        
         return new UserDTO(
                 user.getId(),
                 user.getFirstname(),
