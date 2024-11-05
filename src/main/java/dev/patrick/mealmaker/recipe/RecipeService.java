@@ -2,6 +2,7 @@ package dev.patrick.mealmaker.recipe;
 
 import dev.patrick.mealmaker.exception.ResourceNotFoundException;
 import dev.patrick.mealmaker.user.User;
+import dev.patrick.mealmaker.user.UserDTO;
 import dev.patrick.mealmaker.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,21 +28,25 @@ public class RecipeService {
     private final RecipeIngredientRepository recipeIngredientRepository;
 
 
-    public List<Recipe> getAllRecipes() {
+    public List<RecipeDTO.RecipeDisplay> getAllRecipes() {
 
-        return recipeRepository.findAll();
+        return recipeRepository.findAll()
+                .stream().map(this::convertToRecipeDTO)
+                .collect(Collectors.toList());
 
     }
 
-    public Recipe getRecipe(Integer recipeId) {
-        return recipeRepository.findById(recipeId)
+    public RecipeDTO.RecipeDisplay getRecipe(Integer recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Recipe not found"
                 ));
+
+        return convertToRecipeDTO(recipe);
     }
 
 //    @Transactional
-    public Recipe addRecipe(RecipeRequest request) {
+    public RecipeDTO.RecipeDisplay addRecipe(RecipeRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found"
@@ -94,7 +100,39 @@ public class RecipeService {
             instructionRepository.save(instruction);
         }
 
-        return recipe;
+        return convertToRecipeDTO(recipe);
 
+    }
+
+    private RecipeDTO.RecipeDisplay convertToRecipeDTO(Recipe recipe) {
+
+        UserDTO.UserRecipeDisplay userDTO = convertToUserRecipeDTO(recipe.getUser());
+
+        return new RecipeDTO.RecipeDisplay(
+                recipe.getId(),
+                recipe.getTitle(),
+                recipe.getDescription(),
+                recipe.getServings(),
+                recipe.getTotalCost(),
+                recipe.getPrepTime(),
+                recipe.getCookTime(),
+                recipe.getImage(),
+                userDTO
+        );
+    }
+
+    private UserDTO.UserRecipeDisplay convertToUserRecipeDTO(User user) {
+
+        List<Integer> recipes = user.getRecipes().stream()
+                .map(recipe -> recipe.getId())
+                .collect(Collectors.toList());
+
+        return new UserDTO.UserRecipeDisplay(
+                user.getId(),
+                user.getFirstname(),
+                user.getLastname(),
+                user.getEmail(),
+                recipes
+        );
     }
 }

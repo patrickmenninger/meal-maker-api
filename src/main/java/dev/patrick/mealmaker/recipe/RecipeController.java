@@ -14,18 +14,18 @@ public class RecipeController {
     private final RecipeService recipeService;
 
     @GetMapping
-    public List<Recipe> getRecipes() {
+    public List<RecipeDTO.RecipeDisplay> getRecipes() {
         return recipeService.getAllRecipes();
     }
 
     @GetMapping("{recipeId}")
-    public Recipe getRecipe(@PathVariable Integer recipeId) {
+    public RecipeDTO.RecipeDisplay getRecipe(@PathVariable Integer recipeId) {
         return recipeService.getRecipe(recipeId);
     }
 
     @PostMapping
-    public ResponseEntity<String> addRecipe(@RequestBody RecipeRequest request) {
-        return ResponseEntity.ok(recipeService.addRecipe(request).getTitle());
+    public RecipeDTO.RecipeDisplay addRecipe(@RequestBody RecipeRequest request) {
+        return recipeService.addRecipe(request);
     }
 
 }
