@@ -1,6 +1,8 @@
 package dev.patrick.mealmaker.user;
 
 import dev.patrick.mealmaker.exception.ResourceNotFoundException;
+import dev.patrick.mealmaker.recipe.Recipe;
+import dev.patrick.mealmaker.recipe.RecipeDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -14,32 +16,55 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public List<UserDTO> getAllUsers() {
+    public List<UserDTO.UserDisplay> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(user -> new UserDTO(
-                        user.getId(),
-                        user.getFirstname(),
-                        user.getLastname(),
-                        user.getEmail(),
-                        user.getRole())
-                )
+                .map(this::convertToUserDTO)
                 .collect(Collectors.toList());
 
     }
 
-    public UserDTO getUser(Integer id) {
+    public UserDTO.UserDisplay getUser(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found"
                 ));
 
-        return new UserDTO(
+        return convertToUserDTO(user);
+    }
+
+    private UserDTO.UserDisplay convertToUserDTO(User user) {
+
+        List<RecipeDTO.RecipeUserDisplay> recipes = user.getRecipes().stream()
+                .map(this::convertToRecipeUserDTO)
+                .collect(Collectors.toList());
+
+        UserDTO.UserDisplay userDTO = new UserDTO.UserDisplay(
                 user.getId(),
                 user.getFirstname(),
                 user.getLastname(),
                 user.getEmail(),
-                user.getRole()
+                user.getRole(),
+                recipes
         );
+
+        return userDTO;
+
     }
+
+    private RecipeDTO.RecipeUserDisplay convertToRecipeUserDTO(Recipe recipe) {
+        RecipeDTO.RecipeUserDisplay recipeDTO = new RecipeDTO.RecipeUserDisplay(
+                recipe.getId(),
+                recipe.getTitle(),
+                recipe.getDescription(),
+                recipe.getServings(),
+                recipe.getTotalCost(),
+                recipe.getPrepTime(),
+                recipe.getCookTime(),
+                recipe.getImage()
+        );
+
+        return recipeDTO;
+    }
+
 }

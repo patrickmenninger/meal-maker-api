@@ -26,7 +26,7 @@ public class Recipe {
 
     /** The specific id of the recipe in the db */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
     private String description;
@@ -40,21 +40,19 @@ public class Recipe {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @OneToMany(mappedBy = "recipe")
-    private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
-
+//
+//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<RecipeIngredient> recipeIngredients;
+//
     @OneToMany(mappedBy = "recipe")
     private List<Instruction> instructions;
-
-    public void addIngredient(Ingredient ingredient, Integer quantity, String unit) {
-        RecipeIngredient recipeIngredient = new RecipeIngredient(this, ingredient, quantity, unit);
-        recipeIngredients.add(recipeIngredient);
-    }
-
-    public void removeIngredient(Ingredient ingredient) {
-        recipeIngredients.removeIf(ri -> ri.getIngredient().equals(ingredient));
-    }
+//
+//    public void addIngredient(Ingredient ingredient, Integer quantity, String unit) {
+//        if (ingredient != null) {
+//            RecipeIngredient recipeIngredient = new RecipeIngredient(this, ingredient, quantity, unit);
+//            recipeIngredients.add(recipeIngredient);
+//        }
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -67,6 +65,11 @@ public class Recipe {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return this.title;
     }
 
 }

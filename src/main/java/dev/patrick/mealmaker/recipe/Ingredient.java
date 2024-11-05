@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,8 +24,15 @@ public class Ingredient {
     private Integer id;
     private String name;
 
-    @OneToMany(mappedBy = "ingredient")
-    private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
+//    @OneToMany(mappedBy = "ingredient")
+//    private List<RecipeIngredient> recipeIngredients;
+//
+//    public void addRecipe(Recipe recipe, Integer quantity, String unit) {
+//        if (recipe != null) {
+//            RecipeIngredient recipeIngredient = new RecipeIngredient(recipe, this, quantity, unit);
+//            recipeIngredients.add(recipeIngredient);
+//        }
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -37,6 +45,11 @@ public class Ingredient {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 
 }
