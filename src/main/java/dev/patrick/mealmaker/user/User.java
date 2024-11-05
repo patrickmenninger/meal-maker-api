@@ -1,6 +1,7 @@
 package dev.patrick.mealmaker.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.patrick.mealmaker.recipe.Recipe;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.Transient;
@@ -33,10 +34,9 @@ public class User  implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-//    @Transient
-//    private String accessToken;
-//    @JsonIgnore
-//    private String refreshToken;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Recipe> recipes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
