@@ -16,22 +16,15 @@ public class RecipeIngredient {
 
     @ManyToOne
     @MapsId("recipeId")
-    @JoinColumn(name = "recipe_id")
+    @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 
     @ManyToOne
     @MapsId("ingredientId")
-    @JoinColumn(name = "ingredient_id")
+    @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
 
     private Integer quantity;
     private String amount;
-
-    public RecipeIngredient(Recipe recipe, Ingredient ingredient, Integer quantity, String amount) {
-        this.recipe = recipe;
-        this.ingredient = ingredient;
-        this.quantity = quantity;
-        this.amount = amount;
-    }
 
 }
