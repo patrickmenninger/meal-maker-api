@@ -6,7 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Recipe class holds information about the title of the recipe,
@@ -26,10 +27,24 @@ public class Recipe {
     @GeneratedValue
     private Integer id;
     private String title;
+    private String description;
     private int servings;
-    private int cookTime;
     private double totalCost;
-    private double servingCost;
+    /** In minutes */
+    private int prepTime;
+    private int cookTime;
     private String image;
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
+
+    public void addIngredient(Ingredient ingredient, Integer quantity, String unit) {
+        RecipeIngredient recipeIngredient = new RecipeIngredient(this, ingredient, quantity, unit);
+        recipeIngredients.add(recipeIngredient);
+    }
+
+    public void removeIngredient(Ingredient ingredient) {
+        recipeIngredients.removeIf(ri -> ri.getIngredient().equals(ingredient));
+    }
 
 }
