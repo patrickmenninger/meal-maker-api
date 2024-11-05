@@ -42,17 +42,17 @@ public class DefaultExceptionHandler {
 
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<APIError> handleAllExceptions(Exception e,
-                                                    HttpServletRequest request) {
-        APIError apiError = new APIError(
-                request.getRequestURI(),
-                e.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                LocalDateTime.now()
-        );
-
-        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<APIError> handleAllExceptions(Exception e,
+//                                                    HttpServletRequest request) {
+//        APIError apiError = new APIError(
+//                request.getRequestURI(),
+//                e.getMessage(),
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                LocalDateTime.now()
+//        );
+//
+//        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
 }

@@ -22,7 +22,7 @@ public class Instruction {
     private String instructionText;
 
     @ManyToOne
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
 }

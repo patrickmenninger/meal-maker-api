@@ -1,5 +1,6 @@
 package dev.patrick.mealmaker.recipe;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import dev.patrick.mealmaker.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,9 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Recipe class holds information about the title of the recipe,
@@ -22,11 +21,12 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "recipes")
+
 public class Recipe {
 
     /** The specific id of the recipe in the db */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Integer id;
     private String title;
     private String description;
@@ -38,13 +38,13 @@ public class Recipe {
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "recipe")
     private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "recipe")
     private List<Instruction> instructions;
 
     public void addIngredient(Ingredient ingredient, Integer quantity, String unit) {
@@ -54,6 +54,19 @@ public class Recipe {
 
     public void removeIngredient(Ingredient ingredient) {
         recipeIngredients.removeIf(ri -> ri.getIngredient().equals(ingredient));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recipe recipe = (Recipe) o;
+        return this.id.equals(recipe.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
 }

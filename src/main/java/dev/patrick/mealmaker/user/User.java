@@ -1,6 +1,7 @@
 package dev.patrick.mealmaker.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.patrick.mealmaker.recipe.Recipe;
 import jakarta.persistence.*;
 import lombok.*;

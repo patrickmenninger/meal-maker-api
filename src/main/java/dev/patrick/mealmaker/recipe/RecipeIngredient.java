@@ -1,29 +1,27 @@
 package dev.patrick.mealmaker.recipe;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-//TODO: Make the id a composite of recipe id and ingredient id
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "recipe_ingredient")
-@IdClass(RecipeIngredientId.class)
 public class RecipeIngredient {
 
-    @Id
-    @Column(name = "recipe_id")
-    private Long recipeId;
-
-    @Id
-    @Column(name = "ingredient_id")
-    private Long ingredientId;
+    @EmbeddedId
+    private RecipeIngredientId id;
 
     @ManyToOne
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    @MapsId("recipeId")
+    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
     @ManyToOne
-    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
+    @MapsId("ingredientId")
+    @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 
     private Integer quantity;
