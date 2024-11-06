@@ -1,6 +1,6 @@
 package dev.patrick.mealmaker.recipe;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import dev.patrick.mealmaker.recipe.ingredient.RecipeIngredient;
 import dev.patrick.mealmaker.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

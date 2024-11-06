@@ -1,5 +1,6 @@
 package dev.patrick.mealmaker.recipe;
 
+import dev.patrick.mealmaker.recipe.ingredient.RecipeIngredientDTO;
 import dev.patrick.mealmaker.user.UserDTO;
 
 import java.util.List;

@@ -1,15 +1,13 @@
 package dev.patrick.mealmaker.recipe;
 
 import dev.patrick.mealmaker.exception.ResourceNotFoundException;
+import dev.patrick.mealmaker.recipe.ingredient.*;
 import dev.patrick.mealmaker.user.User;
 import dev.patrick.mealmaker.user.UserDTO;
 import dev.patrick.mealmaker.user.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 

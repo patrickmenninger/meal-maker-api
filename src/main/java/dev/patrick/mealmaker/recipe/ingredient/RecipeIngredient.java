@@ -1,6 +1,6 @@
-package dev.patrick.mealmaker.recipe;
+package dev.patrick.mealmaker.recipe.ingredient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.patrick.mealmaker.recipe.Recipe;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

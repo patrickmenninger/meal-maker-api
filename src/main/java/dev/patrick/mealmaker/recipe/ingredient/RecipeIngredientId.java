@@ -1,4 +1,4 @@
-package dev.patrick.mealmaker.recipe;
+package dev.patrick.mealmaker.recipe.ingredient;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

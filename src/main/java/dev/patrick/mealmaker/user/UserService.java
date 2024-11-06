@@ -3,10 +3,9 @@ package dev.patrick.mealmaker.user;
 import dev.patrick.mealmaker.exception.ResourceNotFoundException;
 import dev.patrick.mealmaker.recipe.Recipe;
 import dev.patrick.mealmaker.recipe.RecipeDTO;
-import dev.patrick.mealmaker.recipe.RecipeIngredient;
-import dev.patrick.mealmaker.recipe.RecipeIngredientDTO;
+import dev.patrick.mealmaker.recipe.ingredient.RecipeIngredient;
+import dev.patrick.mealmaker.recipe.ingredient.RecipeIngredientDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
