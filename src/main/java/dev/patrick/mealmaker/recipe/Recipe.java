@@ -40,10 +40,10 @@ public class Recipe {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-//
-//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<RecipeIngredient> recipeIngredients;
-//
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecipeIngredient> recipeIngredients;
+
     @OneToMany(mappedBy = "recipe")
     private List<Instruction> instructions;
 //

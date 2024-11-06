@@ -3,6 +3,8 @@ package dev.patrick.mealmaker.user;
 import dev.patrick.mealmaker.exception.ResourceNotFoundException;
 import dev.patrick.mealmaker.recipe.Recipe;
 import dev.patrick.mealmaker.recipe.RecipeDTO;
+import dev.patrick.mealmaker.recipe.RecipeIngredient;
+import dev.patrick.mealmaker.recipe.RecipeIngredientDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,11 @@ public class UserService {
     }
 
     private RecipeDTO.RecipeUserDisplay convertToRecipeUserDTO(Recipe recipe) {
+
+        List<RecipeIngredientDTO.RecipeIngredientDisplay> ingredients = recipe.getRecipeIngredients()
+                .stream().map(this::convertToRecipeIngredientDTO)
+                .collect(Collectors.toList());
+
         RecipeDTO.RecipeUserDisplay recipeDTO = new RecipeDTO.RecipeUserDisplay(
                 recipe.getId(),
                 recipe.getTitle(),
@@ -60,10 +67,23 @@ public class UserService {
                 recipe.getTotalCost(),
                 recipe.getPrepTime(),
                 recipe.getCookTime(),
-                recipe.getImage()
+                ingredients,
+                recipe.getImage(),
+                recipe.getInstructions()
         );
 
         return recipeDTO;
+    }
+
+    private RecipeIngredientDTO.RecipeIngredientDisplay convertToRecipeIngredientDTO(
+            RecipeIngredient recipeIngredient) {
+
+        return new RecipeIngredientDTO.RecipeIngredientDisplay(
+                recipeIngredient.getIngredient().getName(),
+                recipeIngredient.getQuantity(),
+                recipeIngredient.getAmount()
+        );
+
     }
 
 }

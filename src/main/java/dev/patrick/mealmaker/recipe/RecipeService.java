@@ -46,7 +46,7 @@ public class RecipeService {
     }
 
 //    @Transactional
-    public RecipeDTO.RecipeDisplay addRecipe(RecipeRequest request) {
+    public /*RecipeDTO.RecipeDisplay*/ void addRecipe(RecipeRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found"
@@ -63,30 +63,32 @@ public class RecipeService {
                 .image(request.getImage())
                 .build();
 
-        /** Adds all ingredients and updates the relationship table */
-        Ingredient ingredient = ingredientRepository.findByName(request.getIngredientNames().get(0))
-                .orElseThrow();
-
-        RecipeIngredient recipeIngredient = new RecipeIngredient();
-        RecipeIngredientId id = new RecipeIngredientId();
-        id.setRecipeId(recipe.getId());
-        id.setIngredientId(ingredient.getId());
-
-        recipeIngredient.setId(id);
-        recipeIngredient.setRecipe(recipe);
-        recipeIngredient.setIngredient(ingredient);
-        recipeIngredient.setQuantity(request.getQuantities().get(0));
-        recipeIngredient.setAmount(request.getUnits().get(0));
-
         /** Saves the recipe so the id can be referenced in the join table */
         recipeRepository.save(recipe);
 
-        /**
-         * Saves the entry in the join table with a reference to recipe and the ingredient
-         * You don't need to save the ingredient because it is already in the db and
-         * you're not changing it
-         */
-        recipeIngredientRepository.save(recipeIngredient);
+        /** Adds all ingredients and updates the relationship table */
+        for (int i = 0; i < request.getIngredientNames().size(); i++) {
+            Ingredient ingredient = ingredientRepository.findByName(request.getIngredientNames().get(i))
+                    .orElseThrow(() -> new ResourceNotFoundException("Ingredient not found"));
+
+            RecipeIngredient recipeIngredient = new RecipeIngredient();
+            RecipeIngredientId id = new RecipeIngredientId();
+            id.setRecipeId(recipe.getId());
+            id.setIngredientId(ingredient.getId());
+
+            recipeIngredient.setId(id);
+            recipeIngredient.setRecipe(recipe);
+            recipeIngredient.setIngredient(ingredient);
+            recipeIngredient.setQuantity(request.getQuantities().get(i));
+            recipeIngredient.setAmount(request.getUnits().get(i));
+
+            /**
+             * Saves the entry in the join table with a reference to recipe and the ingredient
+             * You don't need to save the ingredient because it is already in the db and
+             * you're not changing it
+             */
+            recipeIngredientRepository.save(recipeIngredient);
+        }
 
         for (int i = 0; i < request.getInstructionTexts().size(); i++) {
 
@@ -100,13 +102,16 @@ public class RecipeService {
             instructionRepository.save(instruction);
         }
 
-        return convertToRecipeDTO(recipe);
-
+//        return convertToRecipeDTO(recipe);
     }
 
     private RecipeDTO.RecipeDisplay convertToRecipeDTO(Recipe recipe) {
 
         UserDTO.UserRecipeDisplay userDTO = convertToUserRecipeDTO(recipe.getUser());
+
+        List<RecipeIngredientDTO.RecipeIngredientDisplay> ingredientsDTO = recipe.getRecipeIngredients()
+                .stream().map(this::convertToRecipeIngredientDTO)
+                .collect(Collectors.toList());
 
         return new RecipeDTO.RecipeDisplay(
                 recipe.getId(),
@@ -116,8 +121,10 @@ public class RecipeService {
                 recipe.getTotalCost(),
                 recipe.getPrepTime(),
                 recipe.getCookTime(),
+                ingredientsDTO,
                 recipe.getImage(),
-                userDTO
+                userDTO,
+                recipe.getInstructions()
         );
     }
 
@@ -134,5 +141,16 @@ public class RecipeService {
                 user.getEmail(),
                 recipes
         );
+    }
+
+    private RecipeIngredientDTO.RecipeIngredientDisplay convertToRecipeIngredientDTO(
+            RecipeIngredient recipeIngredient) {
+
+        return new RecipeIngredientDTO.RecipeIngredientDisplay(
+                recipeIngredient.getIngredient().getName(),
+                recipeIngredient.getQuantity(),
+                recipeIngredient.getAmount()
+        );
+
     }
 }

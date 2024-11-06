@@ -24,15 +24,8 @@ public class Ingredient {
     private Integer id;
     private String name;
 
-//    @OneToMany(mappedBy = "ingredient")
-//    private List<RecipeIngredient> recipeIngredients;
-//
-//    public void addRecipe(Recipe recipe, Integer quantity, String unit) {
-//        if (recipe != null) {
-//            RecipeIngredient recipeIngredient = new RecipeIngredient(recipe, this, quantity, unit);
-//            recipeIngredients.add(recipeIngredient);
-//        }
-//    }
+    @OneToMany(mappedBy = "ingredient")
+    private List<RecipeIngredient> recipeIngredients;
 
     @Override
     public boolean equals(Object o) {

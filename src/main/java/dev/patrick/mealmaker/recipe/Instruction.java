@@ -1,5 +1,6 @@
 package dev.patrick.mealmaker.recipe;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class Instruction {
     private Integer stepNumber;
     private String instructionText;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;

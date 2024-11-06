@@ -14,9 +14,10 @@ public class RecipeDTO {
             Double totalCost,
             Integer prepTime,
             Integer cookTime,
+            List<RecipeIngredientDTO.RecipeIngredientDisplay> ingredients,
             String image,
-            UserDTO.UserRecipeDisplay user
-//            List<Instruction> instructions
+            UserDTO.UserRecipeDisplay user,
+            List<Instruction> instructions
 
     ) {}
 
@@ -28,8 +29,9 @@ public class RecipeDTO {
             Double totalCost,
             Integer prepTime,
             Integer cookTime,
-            String image
-//            List<Instruction> instructions
+            List<RecipeIngredientDTO.RecipeIngredientDisplay> ingredients,
+            String image,
+            List<Instruction> instructions
     ) {}
 
 }
