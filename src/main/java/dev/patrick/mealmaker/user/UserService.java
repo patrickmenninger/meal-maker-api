@@ -19,7 +19,7 @@ public class UserService {
 
     public List<UserDTO.UserDisplay> getAllUsers() {
         return userRepository.findAll()
-                .stream().map(this::convertToUserDTO)
+                .stream().map(UserDTO::convertToUserDTO)
                 .collect(Collectors.toList());
 
     }
@@ -30,59 +30,7 @@ public class UserService {
                         "User not found"
                 ));
 
-        return convertToUserDTO(user);
-    }
-
-    private UserDTO.UserDisplay convertToUserDTO(User user) {
-
-        List<RecipeDTO.RecipeUserDisplay> recipes = user.getRecipes().stream()
-                .map(this::convertToRecipeUserDTO)
-                .collect(Collectors.toList());
-
-        UserDTO.UserDisplay userDTO = new UserDTO.UserDisplay(
-                user.getId(),
-                user.getFirstname(),
-                user.getLastname(),
-                user.getEmail(),
-                user.getRole(),
-                recipes
-        );
-
-        return userDTO;
-
-    }
-
-    private RecipeDTO.RecipeUserDisplay convertToRecipeUserDTO(Recipe recipe) {
-
-        List<RecipeIngredientDTO.RecipeIngredientDisplay> ingredients = recipe.getRecipeIngredients()
-                .stream().map(this::convertToRecipeIngredientDTO)
-                .collect(Collectors.toList());
-
-        RecipeDTO.RecipeUserDisplay recipeDTO = new RecipeDTO.RecipeUserDisplay(
-                recipe.getId(),
-                recipe.getTitle(),
-                recipe.getDescription(),
-                recipe.getServings(),
-                recipe.getTotalCost(),
-                recipe.getPrepTime(),
-                recipe.getCookTime(),
-                ingredients,
-                recipe.getImage(),
-                recipe.getInstructions()
-        );
-
-        return recipeDTO;
-    }
-
-    private RecipeIngredientDTO.RecipeIngredientDisplay convertToRecipeIngredientDTO(
-            RecipeIngredient recipeIngredient) {
-
-        return new RecipeIngredientDTO.RecipeIngredientDisplay(
-                recipeIngredient.getIngredient().getName(),
-                recipeIngredient.getQuantity(),
-                recipeIngredient.getAmount()
-        );
-
+        return UserDTO.convertToUserDTO(user);
     }
 
 }

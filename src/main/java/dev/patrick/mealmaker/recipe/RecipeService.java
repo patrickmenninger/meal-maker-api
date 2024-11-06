@@ -29,7 +29,7 @@ public class RecipeService {
     public List<RecipeDTO.RecipeDisplay> getAllRecipes() {
 
         return recipeRepository.findAll()
-                .stream().map(this::convertToRecipeDTO)
+                .stream().map(RecipeDTO::convertToRecipeDTO)
                 .collect(Collectors.toList());
 
     }
@@ -40,7 +40,7 @@ public class RecipeService {
                         "Recipe not found"
                 ));
 
-        return convertToRecipeDTO(recipe);
+        return RecipeDTO.convertToRecipeDTO(recipe);
     }
 
 //    @Transactional
@@ -100,55 +100,7 @@ public class RecipeService {
             instructionRepository.save(instruction);
         }
 
-//        return convertToRecipeDTO(recipe);
+//        return RecipeDTO.convertToRecipeDTO(recipe);
     }
 
-    private RecipeDTO.RecipeDisplay convertToRecipeDTO(Recipe recipe) {
-
-        UserDTO.UserRecipeDisplay userDTO = convertToUserRecipeDTO(recipe.getUser());
-
-        List<RecipeIngredientDTO.RecipeIngredientDisplay> ingredientsDTO = recipe.getRecipeIngredients()
-                .stream().map(this::convertToRecipeIngredientDTO)
-                .collect(Collectors.toList());
-
-        return new RecipeDTO.RecipeDisplay(
-                recipe.getId(),
-                recipe.getTitle(),
-                recipe.getDescription(),
-                recipe.getServings(),
-                recipe.getTotalCost(),
-                recipe.getPrepTime(),
-                recipe.getCookTime(),
-                ingredientsDTO,
-                recipe.getImage(),
-                userDTO,
-                recipe.getInstructions()
-        );
-    }
-
-    private UserDTO.UserRecipeDisplay convertToUserRecipeDTO(User user) {
-
-        List<Integer> recipes = user.getRecipes().stream()
-                .map(recipe -> recipe.getId())
-                .collect(Collectors.toList());
-
-        return new UserDTO.UserRecipeDisplay(
-                user.getId(),
-                user.getFirstname(),
-                user.getLastname(),
-                user.getEmail(),
-                recipes
-        );
-    }
-
-    private RecipeIngredientDTO.RecipeIngredientDisplay convertToRecipeIngredientDTO(
-            RecipeIngredient recipeIngredient) {
-
-        return new RecipeIngredientDTO.RecipeIngredientDisplay(
-                recipeIngredient.getIngredient().getName(),
-                recipeIngredient.getQuantity(),
-                recipeIngredient.getAmount()
-        );
-
-    }
 }

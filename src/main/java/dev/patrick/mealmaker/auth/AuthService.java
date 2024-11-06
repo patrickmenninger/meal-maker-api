@@ -3,6 +3,7 @@ package dev.patrick.mealmaker.auth;
 import dev.patrick.mealmaker.security.JwtService;
 import dev.patrick.mealmaker.user.Role;
 import dev.patrick.mealmaker.user.User;
+import dev.patrick.mealmaker.user.UserDTO;
 import dev.patrick.mealmaker.user.UserRepository;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -102,4 +105,18 @@ public class AuthService {
 
     }
 
+    public UserDTO.UserDisplay currentUser() {
+
+        /**
+         * Because the request passed the jwtAuthenticationFilter,
+         * The user is authenticated
+         */
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow();
+
+        return UserDTO.convertToUserDTO(user);
+
+    }
 }
