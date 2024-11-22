@@ -25,7 +25,7 @@ public class RecipeController {
 
     @PostMapping
     public /*RecipeDTO.RecipeDisplay*/ ResponseEntity addRecipe(@RequestBody RecipeRequest request) {
-//        return recipeService.addRecipe(request);
+        recipeService.addRecipe(request);
         return ResponseEntity.ok().build();
     }
 

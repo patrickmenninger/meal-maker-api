@@ -8,6 +8,7 @@ import dev.patrick.mealmaker.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,6 @@ public class RecipeService {
         return RecipeDTO.convertToRecipeDTO(recipe);
     }
 
-//    @Transactional
     public /*RecipeDTO.RecipeDisplay*/ void addRecipe(RecipeRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -59,6 +59,7 @@ public class RecipeService {
                 .prepTime(request.getPrepTime())
                 .cookTime(request.getCookTime())
                 .image(request.getImage())
+                .createdDate(LocalDate.now())
                 .build();
 
         /** Saves the recipe so the id can be referenced in the join table */

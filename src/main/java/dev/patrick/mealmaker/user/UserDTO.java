@@ -57,6 +57,7 @@ public class UserDTO {
                 recipe.getTotalCost(),
                 recipe.getPrepTime(),
                 recipe.getCookTime(),
+                recipe.getCreatedDate(),
                 ingredients,
                 recipe.getImage(),
                 recipe.getInstructions()

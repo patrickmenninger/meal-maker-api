@@ -3,6 +3,7 @@ package dev.patrick.mealmaker.exception;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -39,6 +40,20 @@ public class DefaultExceptionHandler {
         );
 
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<APIError> handleException(DataIntegrityViolationException e, HttpServletRequest request) {
+
+        APIError apiError = new APIError(
+                request.getRequestURI(),
+                e.getMessage(),
+                HttpStatus.CONFLICT.value(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
 
     }
 

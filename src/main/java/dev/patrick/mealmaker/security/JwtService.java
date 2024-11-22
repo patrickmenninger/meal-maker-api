@@ -19,7 +19,7 @@ public class JwtService {
 
     //TODO: Make better
     private static final String SECRET_KEY = "myZtestZsecretZkeyZ12345678901234567890123456789012";
-    private static final long accessTokenExpiration = 1000 * 10;
+    private static final long accessTokenExpiration = 1000 * 60 * 15;
     private static final long refreshTokenExpiration = 1000 * 60 * 60 * 24;
 
     public String generateRefreshToken(UserDetails userDetails) {

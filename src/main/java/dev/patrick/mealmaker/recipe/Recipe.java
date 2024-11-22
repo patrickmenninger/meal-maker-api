@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -35,6 +36,7 @@ public class Recipe {
     /** In minutes */
     private int prepTime;
     private int cookTime;
+    private LocalDate createdDate;
     private String image;
 
     @ManyToOne

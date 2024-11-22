@@ -5,6 +5,7 @@ import dev.patrick.mealmaker.recipe.ingredient.RecipeIngredientDTO;
 import dev.patrick.mealmaker.user.User;
 import dev.patrick.mealmaker.user.UserDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,7 @@ public class RecipeDTO {
             Double totalCost,
             Integer prepTime,
             Integer cookTime,
+            LocalDate createdDate,
             List<RecipeIngredientDTO.RecipeIngredientDisplay> ingredients,
             String image,
             UserDTO.UserRecipeDisplay user,
@@ -33,6 +35,7 @@ public class RecipeDTO {
             Double totalCost,
             Integer prepTime,
             Integer cookTime,
+            LocalDate createdDate,
             List<RecipeIngredientDTO.RecipeIngredientDisplay> ingredients,
             String image,
             List<Instruction> instructions
@@ -54,6 +57,7 @@ public class RecipeDTO {
                 recipe.getTotalCost(),
                 recipe.getPrepTime(),
                 recipe.getCookTime(),
+                recipe.getCreatedDate(),
                 ingredientsDTO,
                 recipe.getImage(),
                 userDTO,
