@@ -3,9 +3,9 @@ package dev.patrick.mealmaker.recipe;
 import dev.patrick.mealmaker.exception.ResourceNotFoundException;
 import dev.patrick.mealmaker.recipe.ingredient.*;
 import dev.patrick.mealmaker.user.User;
-import dev.patrick.mealmaker.user.UserDTO;
 import dev.patrick.mealmaker.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,11 +27,31 @@ public class RecipeService {
     private final RecipeIngredientRepository recipeIngredientRepository;
 
 
-    public List<RecipeDTO.RecipeDisplay> getAllRecipes() {
+    public List<RecipeDTO.RecipeDisplay> getAllRecipes(Pageable pageRequest, RecipeRequest recipeRequest) {
 
-        return recipeRepository.findAll()
-                .stream().map(RecipeDTO::convertToRecipeDTO)
-                .collect(Collectors.toList());
+            if (recipeRequest.getTitle() != null ||
+                    recipeRequest.getMinCookTime() != null || recipeRequest.getMaxCookTime() != null ||
+                    recipeRequest.getMinTotalCost() != null || recipeRequest.getMaxTotalCost() != null ||
+                    recipeRequest.getStartDate() != null || recipeRequest.getEndDate() != null
+            ) {
+
+                return recipeRepository.findByFilters(recipeRequest.getTitle(),
+                        recipeRequest.getMinTotalCost(),
+                        recipeRequest.getMaxTotalCost(),
+                        recipeRequest.getMinCookTime(),
+                        recipeRequest.getMaxCookTime(),
+                        recipeRequest.getStartDate(),
+                        recipeRequest.getEndDate(),
+                        pageRequest)
+                        .stream().map(RecipeDTO::convertToRecipeDTO)
+                        .collect(Collectors.toList());
+
+            } else {
+
+                return recipeRepository.findAll(pageRequest)
+                        .stream().map(RecipeDTO::convertToRecipeDTO)
+                        .collect(Collectors.toList());
+            }
 
     }
 
@@ -44,7 +64,7 @@ public class RecipeService {
         return RecipeDTO.convertToRecipeDTO(recipe);
     }
 
-    public /*RecipeDTO.RecipeDisplay*/ void addRecipe(RecipeRequest request) {
+    public /*RecipeDTO.RecipeDisplay*/ void addRecipe(RecipeAddRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found"
