@@ -45,7 +45,6 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<APIError> handleException(DataIntegrityViolationException e, HttpServletRequest request) {
-
         APIError apiError = new APIError(
                 request.getRequestURI(),
                 e.getMessage(),
