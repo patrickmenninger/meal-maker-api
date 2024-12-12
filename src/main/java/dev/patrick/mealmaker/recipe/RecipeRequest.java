@@ -15,7 +15,7 @@ public class RecipeRequest {
 
     private SortType sort;
     private String direc;
-    private Integer page;
+    private Integer page = 0;
 
     private String title;
     private Double minTotalCost;
