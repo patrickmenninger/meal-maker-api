@@ -27,7 +27,7 @@ public class RecipeController {
                     .with(Sort.Direction.fromString(recipeRequest.getDirec())));
         }
 
-        Pageable pageRequest = PageRequest.of(recipeRequest.getPage(), 2, sortWay);
+        Pageable pageRequest = PageRequest.of(recipeRequest.getPage(), 10, sortWay);
 
         return recipeService.getAllRecipes(pageRequest, recipeRequest);
     }

@@ -84,8 +84,7 @@ public class RecipeDTO {
             RecipeIngredient recipeIngredient) {
 
         return new RecipeIngredientDTO.RecipeIngredientDisplay(
-                recipeIngredient.getIngredient().getName(),
-                recipeIngredient.getQuantity(),
+                recipeIngredient.getName(),
                 recipeIngredient.getAmount()
         );
 

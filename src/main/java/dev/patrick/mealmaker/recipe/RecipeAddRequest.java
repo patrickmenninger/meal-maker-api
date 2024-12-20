@@ -22,8 +22,7 @@ public class RecipeAddRequest {
     private Integer cookTime;
     private String image;
     private List<String> ingredientNames;
-    private List<Integer> quantities;
-    private List<String> units;
+    private List<String> amount;
     private List<String> instructionTexts;
 
 }

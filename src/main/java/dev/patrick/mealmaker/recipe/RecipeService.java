@@ -21,8 +21,6 @@ public class RecipeService {
 
     private final RecipeRepository recipeRepository;
 
-    private final IngredientRepository ingredientRepository;
-
     private final InstructionRepository instructionRepository;
 
     private final RecipeIngredientRepository recipeIngredientRepository;
@@ -89,19 +87,12 @@ public class RecipeService {
 
         /** Adds all ingredients and updates the relationship table */
         for (int i = 0; i < request.getIngredientNames().size(); i++) {
-            Ingredient ingredient = ingredientRepository.findByName(request.getIngredientNames().get(i))
-                    .orElseThrow(() -> new ResourceNotFoundException("Ingredient not found"));
 
             RecipeIngredient recipeIngredient = new RecipeIngredient();
-            RecipeIngredientId id = new RecipeIngredientId();
-            id.setRecipeId(recipe.getId());
-            id.setIngredientId(ingredient.getId());
 
-            recipeIngredient.setId(id);
             recipeIngredient.setRecipe(recipe);
-            recipeIngredient.setIngredient(ingredient);
-            recipeIngredient.setQuantity(request.getQuantities().get(i));
-            recipeIngredient.setAmount(request.getUnits().get(i));
+            recipeIngredient.setName(request.getIngredientNames().get(i));
+            recipeIngredient.setAmount(request.getAmount().get(i));
 
             /**
              * Saves the entry in the join table with a reference to recipe and the ingredient
