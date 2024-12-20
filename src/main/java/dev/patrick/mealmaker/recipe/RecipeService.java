@@ -4,6 +4,7 @@ import dev.patrick.mealmaker.exception.ResourceNotFoundException;
 import dev.patrick.mealmaker.recipe.ingredient.*;
 import dev.patrick.mealmaker.user.User;
 import dev.patrick.mealmaker.user.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -64,6 +65,7 @@ public class RecipeService {
         return RecipeDTO.convertToRecipeDTO(recipe);
     }
 
+    @Transactional
     public /*RecipeDTO.RecipeDisplay*/ void addRecipe(RecipeAddRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException(
